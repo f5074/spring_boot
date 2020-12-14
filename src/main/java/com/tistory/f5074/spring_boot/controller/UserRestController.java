@@ -3,20 +3,23 @@ package com.tistory.f5074.spring_boot.controller;
 import com.tistory.f5074.spring_boot.common.ApiResponse;
 import com.tistory.f5074.spring_boot.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping(value = {"/user"})
 public class UserRestController {
     @Autowired
     private UserMapper mapper;
 
-    @RequestMapping(value = {"/users/","/users/{userId}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/users","/users/{userId}"}, method = RequestMethod.GET)
     public ApiResponse<List<Map<String,Object>>> users(
               HttpServletRequest request
             , @PathVariable(name="userId", required = false) String userId) throws Exception {
@@ -30,7 +33,7 @@ public class UserRestController {
         return response;
     }
 
-    @RequestMapping(value = {"/users2/","/users2/{USER_ID}/{USER_PW}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/users2","/users2/{USER_ID}","/users2/{USER_ID}/{USER_PW}"}, method = RequestMethod.GET)
     public ApiResponse<List<Map<String,Object>>> users2(
               HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariables) throws Exception {
@@ -43,16 +46,12 @@ public class UserRestController {
             System.out.println(value.toString());
             parameterMap.put(key.toString(), value);
         }
-
-//
-//
 //        if(pathVariables.containsKey("userId")){
 //            parameterMap.put("USER_ID",pathVariables.get("userId"));
 //        }
 //        if(pathVariables.containsKey("userPw")){
 //            parameterMap.put("USER_PW",pathVariables.get("userPw"));
 //        }
-
 
         List<Map<String,Object>>result = mapper.selectUsers(parameterMap);
         response.setData(result);

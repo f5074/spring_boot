@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tistory.f5074.spring_boot.mapper.EquipmentMapper">
+	<select id="selectEqpMst" parameterType="hashmap" resultType="hashmap">
+		SELECT EMST.SITE
+			, EMST.EQP_ID
+			, EMST.EQP_NO
+			, EMST.EQP_GROUP
+			, EMST.CIM_EQP_DESC AS EQP_DESC
+			, EMST.CIM_EQP_TYPE
+			, EMST.EQP_IP
+			, EMST.ROBOT_IP
+			, EMST.FUNAC_IP
+			, EMST.USE_YN
+			, EMST.CREATE_USER
+			, EMST.CREATE_TIME
+			, EMST.UPDATE_USER
+			, EMST.UPDATE_TIME
+		FROM CIM_EQP_MST@CIMORA EMST
+	</select>
+	<select id="selectEqpMaxLoad" parameterType="hashmap" resultType="hashmap">
+		SELECT ELOAD.SITE
+			, ELOAD.EQP_ID
+			, ELOAD.EQP_NO
+			, TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'),'YYYYMMDD HH24MI') AS PER_MIN
+			, ELOAD.ITEM_SPEC
+			, ELOAD.EQP_PART_NUMBER
+			, ELOAD.ITEM_CD
+			, ELOAD.ITEM_DESC
+			, ELOAD.ITEM_VALUE
+			, ELOAD.CREATE_TIME
+			, ELOAD.ITEM_AVG
+			, ELOAD.ITEM_RNG
+			, EMST.EQP_DESC
+		 FROM EQP_MAX_LOAD@CIMORA ELOAD
+		INNER JOIN EQP_MST EMST ON EMST.EQP_ID = ELOAD.EQP_ID
+		WHERE 1 = 1
+			AND ELOAD.EQP_ID = #{EQP_ID}
+		<if test="ITEM_CD != null and ITEM_CD != ''">
+			AND ELOAD.ITEM_CD = #{ITEM_CD}
+		</if>
+			AND TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'),'YYYYMMDDHH24') > #{START_DT}
+			AND TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'),'YYYYMMDDHH24') <![CDATA[<]]> #{END_DT}
+		ORDER BY TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'),'HH24:MI') ASC
+	</select>
+	<select id="selectEqpCdSpec" parameterType="hashmap" resultType="hashmap">
+		SELECT ITEM_CD
+			, ITEM_DESC
+		 FROM EQP_CD_SPEC@CIMORA
+		GROUP BY ITEM_CD, ITEM_DESC
+		ORDER BY ITEM_CD
+	</select>
+
+</mapper>
