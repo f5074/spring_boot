@@ -45,11 +45,33 @@
 		ORDER BY TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'),'HH24:MI') ASC
 	</select>
 	<select id="selectEqpCdSpec" parameterType="hashmap" resultType="hashmap">
-		SELECT ITEM_CD
-			, ITEM_DESC
-		 FROM EQP_CD_SPEC@CIMORA
-		GROUP BY ITEM_CD, ITEM_DESC
-		ORDER BY ITEM_CD
+		SELECT ECD.ITEM_CD
+			 , ECD.ITEM_DESC
+		 FROM EQP_CD_SPEC@CIMORA ECD
+		WHERE 1 = 1
+		<if test="EQP_ID != null and EQP_ID != ''">
+		  AND ECD.EQP_ID = #{EQP_ID}
+		</if>
+		GROUP BY ECD.ITEM_CD, ECD.ITEM_DESC
+		ORDER BY ECD.ITEM_CD
 	</select>
-
+	<select id="selectEqpSrcData" parameterType="hashmap" resultType="hashmap">
+		SELECT SRC.SITE
+			, SRC.EQP_ID
+			, SRC.EQP_NO
+			, SRC.CUR_TIME
+			, SRC.ITEM_SPEC
+			, SRC.EQP_PART_NUMBER
+			, SRC.ITEM_CD
+			, SRC.ITEM_DESC
+			, SRC.ITEM_VALUE
+			, SRC.CREATE_TIME
+		FROM EQP_SRC_DATA@CIMORA SRC
+		WHERE 1 = 1
+		  AND EQP_ID = #{EQP_ID}
+		AND ITEM_CD IN <foreach collection="ITEM_CD" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+		  AND TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MI') > #{START_DT}
+		  AND TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MI') <![CDATA[<]]> #{END_DT}
+		ORDER BY TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MISS') DESC
+	</select>
 </mapper>
