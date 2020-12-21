@@ -3,21 +3,14 @@
 
 <mapper namespace="com.tistory.f5074.spring_boot.mapper.EquipmentMapper">
 	<select id="selectEqpMst" parameterType="hashmap" resultType="hashmap">
-		SELECT EMST.SITE
+		SELECT EMST.PLANT_CODE AS SITE
 			, EMST.EQP_ID
 			, EMST.EQP_NO
-			, EMST.EQP_GROUP
-			, EMST.CIM_EQP_DESC AS EQP_DESC
-			, EMST.CIM_EQP_TYPE
-			, EMST.EQP_IP
-			, EMST.ROBOT_IP
-			, EMST.FUNAC_IP
-			, EMST.USE_YN
-			, EMST.CREATE_USER
-			, EMST.CREATE_TIME
-			, EMST.UPDATE_USER
-			, EMST.UPDATE_TIME
-		FROM CIM_EQP_MST@CIMORA EMST
+			, EMST.EQP_TYPE
+			, EMST.EQP_DESC AS EQP_DESC
+		 FROM EQP_MST EMST
+		WHERE EMST.PLANT_CODE = '1000'
+		  AND EQP_TYPE = 'M'
 	</select>
 	<select id="selectEqpMaxLoad" parameterType="hashmap" resultType="hashmap">
 		SELECT ELOAD.SITE
@@ -59,6 +52,7 @@
 		SELECT SRC.SITE
 			, SRC.EQP_ID
 			, SRC.EQP_NO
+			, EMST.EQP_DESC
 			, SRC.CUR_TIME
 			, SRC.ITEM_SPEC
 			, SRC.EQP_PART_NUMBER
@@ -67,9 +61,13 @@
 			, SRC.ITEM_VALUE
 			, SRC.CREATE_TIME
 		FROM EQP_SRC_DATA@CIMORA SRC
+		INNER JOIN EQP_MST EMST ON EMST.EQP_ID = SRC.EQP_ID
 		WHERE 1 = 1
-		  AND EQP_ID = #{EQP_ID}
-		AND ITEM_CD IN <foreach collection="ITEM_CD" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+		  AND SRC.SITE = #{SITE}
+		  AND SRC.EQP_ID = #{EQP_ID}
+		<if test="ITEM_CD != null and ITEM_CD.size != 0">
+		  AND SRC.ITEM_CD IN <foreach collection="ITEM_CD" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+		</if>
 		  AND TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MI') > #{START_DT}
 		  AND TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MI') <![CDATA[<]]> #{END_DT}
 		ORDER BY TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MISS') DESC

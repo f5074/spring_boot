@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tistory.f5074.spring_boot.mapper.CommonMapper">
+	<select id="selectCommonMasCd" parameterType="hashmap" resultType="hashmap">
+		SELECT TDV.GENE_DV
+			, TDA.GENE_CD
+			, TDA.GENE_CD_DESC
+			, TDA.GENE_CD_DESC2
+			, TDA.USE_YN
+			, TDA.CREATE_USER
+			, TDA.CREATE_TIME
+			, TDA.UPDATE_USER
+			, TDA.UPDATE_TIME
+			, TDV.PW_USE_YN
+		 FROM T_CD_GENE_DV TDV
+		INNER JOIN T_CD_GENE_DATA TDA ON TDA.GENE_DV = TDV.GENE_DV
+		WHERE 1 = 1
+		  AND TDV.GENE_DV = #{GENE_DV}
+		  AND TDV.USE_YN = #{USE_YN}
+		  AND TDA.USE_YN = #{USE_YN}
+	</select>
+</mapper>
