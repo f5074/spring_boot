@@ -3,6 +3,7 @@
 
 <mapper namespace="com.tistory.f5074.spring_boot.mapper.EquipmentMapper">
 	<select id="selectEqpMst" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpMst */
 		SELECT EMST.PLANT_CODE AS SITE
 			, EMST.EQP_ID
 			, EMST.EQP_NO
@@ -13,6 +14,7 @@
 		  AND EQP_TYPE = 'M'
 	</select>
 	<select id="selectEqpMaxLoad" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpMaxLoad */
 		SELECT ELOAD.SITE
 			, ELOAD.EQP_ID
 			, ELOAD.EQP_NO
@@ -38,6 +40,7 @@
 		ORDER BY TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'),'HH24:MI') ASC
 	</select>
 	<select id="selectEqpCdSpec" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpCdSpec */
 		SELECT ECD.ITEM_CD
 			 , ECD.ITEM_DESC
 		 FROM EQP_CD_SPEC@CIMORA ECD
@@ -49,6 +52,7 @@
 		ORDER BY ECD.ITEM_CD
 	</select>
 	<select id="selectEqpSrcData" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpSrcData */
 		SELECT SRC.SITE
 			, SRC.EQP_ID
 			, SRC.EQP_NO
@@ -65,7 +69,7 @@
 		WHERE 1 = 1
 		  AND SRC.SITE = #{SITE}
 		  AND SRC.EQP_ID = #{EQP_ID}
-		<if test="ITEM_CD != null and ITEM_CD.size != 0">
+		<if test="ITEM_CD != null and ITEM_CD.length != 0">
 		  AND SRC.ITEM_CD IN <foreach collection="ITEM_CD" item="item"  open="(" close=")" separator=",">#{item}</foreach>
 		</if>
 		  AND TO_CHAR(TO_TIMESTAMP(SRC.CUR_TIME, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MI') > #{START_DT}
