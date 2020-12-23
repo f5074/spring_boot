@@ -3,6 +3,7 @@
 
 <mapper namespace="com.tistory.f5074.spring_boot.mapper.CommonMapper">
 	<select id="selectCommonMasCd" parameterType="hashmap" resultType="hashmap">
+		/* selectCommonMasCd */
 		SELECT TDV.GENE_DV
 			, TDA.GENE_CD
 			, TDA.GENE_CD_DESC

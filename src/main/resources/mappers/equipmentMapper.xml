@@ -9,9 +9,11 @@
 			, EMST.EQP_NO
 			, EMST.EQP_TYPE
 			, EMST.EQP_DESC AS EQP_DESC
-		 FROM EQP_MST EMST
+		FROM EQP_MST EMST
+		INNER JOIN CIM_EQP_MST@CIMORA CEMST ON CEMST.SITE = EMST.PLANT_CODE AND CEMST.EQP_ID = EMST.EQP_ID AND CEMST.EQP_NO = EMST.EQP_NO
 		WHERE EMST.PLANT_CODE = '1000'
-		  AND EQP_TYPE = 'M'
+		  AND EMST.EQP_TYPE = 'M'
+		  AND CEMST.USE_YN = 'Y'
 	</select>
 	<select id="selectEqpMaxLoad" parameterType="hashmap" resultType="hashmap">
 		/* selectEqpMaxLoad */
