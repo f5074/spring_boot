@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: test
+
   http:
     encoding:
       charset: UTF-8
@@ -14,12 +17,15 @@ spring:
       enabled: ALWAYS
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:oracle:thin:@localhost:1521/xe
+    url: jdbc:log4jdbc:oracle:thin:@${variables.ip}:1521/${variables.sid}
     username: test
     password: test
 mybatis:
   mapper-locations: classpath:mappers/**/*.xml
 
+variables:
+  ip: localhost
+  sid: xe
 
 server:
   port: 80 # Server HTTP port.
@@ -38,9 +44,6 @@ server:
       rotate: true # Enable access log rotation
       suffix: .log # Log file name suffix.
 
-ajp:
-  port: 9090
-
 ---
 spring:
   profiles: test
@@ -52,6 +55,8 @@ server:
     min-spare-threads: 25 # Minimum amount of worker threads.
     accesslog:
       enabled: true # Enable access log.
+ajp:
+  port: 9090
 
 ---
 spring:
@@ -64,3 +69,5 @@ server:
     min-spare-threads: 50 # Minimum amount of worker threads.
     accesslog:
           enabled: true # Enable access log.
+ajp:
+  port: 9090

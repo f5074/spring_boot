@@ -1,27 +1,25 @@
 package com.tistory.f5074.spring_boot;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import javax.sql.DataSource;
-import java.util.Arrays;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MutablePropertySources;
 
 @SpringBootApplication
 @MapperScan(value = {"com.tistory.f5074.spring_boot"})
-@EnableConfigurationProperties()
+@EnableConfigurationProperties
 public class Application {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(Application.class, args);
+        ConfigurableEnvironment  env = (ConfigurableEnvironment) context.getEnvironment();
+        MutablePropertySources propertySources = env.getPropertySources();
+//        propertySources.addLast(new ResourcePropertySource("calsspath:app."));
+
+
 //        String[] beanNames = context.getBeanDefinitionNames();
 //        Arrays.sort(beanNames);
 //        for(String beanName : beanNames){
