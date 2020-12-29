@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE configuration	PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
-
 <configuration>
+<!--&lt;!&ndash;    <properties resource="practice/mybatis/db.properties" />&ndash;&gt;-->
+<!--    <environments default="development">-->
+<!--        <environment id="development">-->
+<!--            <transactionManager type="JDBC" />-->
+<!--            &lt;!&ndash; connecting to Local MySql &ndash;&gt;-->
+<!--&lt;!&ndash;            <dataSource type="POOLED">&ndash;&gt;-->
+<!--&lt;!&ndash;                <property name="driver" value="com.mysql.cj.jdbc.Driver" />&ndash;&gt;-->
+<!--&lt;!&ndash;                <property name="url"&ndash;&gt;-->
+<!--&lt;!&ndash;                          value="jdbc:mysql://${url}:3306/university?characterEncoding=UTF-8&amp;serverTimezone=UTC" />&ndash;&gt;-->
+<!--&lt;!&ndash;                <property name="username" value="${username}" />&ndash;&gt;-->
+<!--&lt;!&ndash;                <property name="password" value="${password}" />&ndash;&gt;-->
+<!--&lt;!&ndash;            </dataSource>&ndash;&gt;-->
 
+<!--            &lt;!&ndash; connecting to Local Oracle &ndash;&gt;-->
+<!--            <dataSource type="POOLED">-->
+<!--                <property name="driver" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />-->
+<!--                <property name="url" value="jdbc:log4jdbc:oracle:thin:@192.168.10.74:1521/SAPORA" />-->
+<!--                <property name="factory" value="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"/>-->
+<!--                <property name="username" value="sappop" />-->
+<!--                <property name="password" value="sappop001" />-->
+<!--            </dataSource>-->
+<!--        </environment>-->
+<!--    </environments>-->
+<!--    <mappers>-->
+<!--        <mapper resource="classpath:mappers/**/*.xml" />-->
+<!--    </mappers>-->
 </configuration>
