@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-*.log
 
 ### STS ###
 .apt_generated
@@ -31,9 +30,13 @@ out/
 
 ### VS Code ###
 .vscode/
-
 *.class
+
 # Package Files #
 *.jar
 *.war
 *.ear
+
+### User Customizing ###
+work/
+*.log

@@ -1,6 +1,6 @@
-package com.tistory.f5074.spring_boot.controller;
+package com.tistory.f5074.spring_boot.controller.rest;
 
-import com.tistory.f5074.spring_boot.common.ApiResponse;
+import com.tistory.f5074.spring_boot.common.model.ApiResponse;
 import com.tistory.f5074.spring_boot.common.utils.CommonUtils;
 import com.tistory.f5074.spring_boot.mapper.CommonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CommonRestController {
      * @throws Exception Exception
      */
     @RequestMapping(value = {"/MAS_CD_GENEDATA_SELECT_BY_CONDITION"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> MAS_CD_GENEDATA_SELECT_BY_CONDITION(HttpServletRequest request
+    public ApiResponse<List<Map<String,Object>>> commonMasCd(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
         Map<String,Object> parameterMap = new HashMap<>();

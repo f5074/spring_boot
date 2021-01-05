@@ -1,4 +1,4 @@
-package com.tistory.f5074.spring_boot.controller;
+package com.tistory.f5074.spring_boot.controller.service;
 
 import com.tistory.f5074.spring_boot.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootApplication
+
 @Controller
 public class UserController {
     @Autowired
     private UserMapper mapper;
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     @RequestMapping(value = {"/jsonObject"}, method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> jsonObject(HttpServletRequest request) throws Exception {
@@ -29,6 +30,7 @@ public class UserController {
         return resultMap;
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     @RequestMapping(value = {"/jsonList"}, method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> jsonList(HttpServletRequest request) throws Exception {

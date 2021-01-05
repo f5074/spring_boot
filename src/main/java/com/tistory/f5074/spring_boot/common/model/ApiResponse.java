@@ -1,20 +1,14 @@
-package com.tistory.f5074.spring_boot.common;
-
-import org.springframework.lang.NonNull;
-
-import java.util.List;
-
+package com.tistory.f5074.spring_boot.common.model;
 
 public class ApiResponse<T> {
-    @NonNull private T data;
+    private T data;
     private String errors;
 
-    @NonNull
     public T getData() {
         return data;
     }
 
-    public void setData(@NonNull T data) {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -25,5 +19,4 @@ public class ApiResponse<T> {
     public void setErrors(String errors) {
         this.errors = errors;
     }
-
 }

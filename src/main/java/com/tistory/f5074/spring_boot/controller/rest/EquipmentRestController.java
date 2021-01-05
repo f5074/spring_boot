@@ -1,6 +1,6 @@
-package com.tistory.f5074.spring_boot.controller;
+package com.tistory.f5074.spring_boot.controller.rest;
 
-import com.tistory.f5074.spring_boot.common.ApiResponse;
+import com.tistory.f5074.spring_boot.common.model.ApiResponse;
 import com.tistory.f5074.spring_boot.common.utils.CommonUtils;
 import com.tistory.f5074.spring_boot.mapper.EquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class EquipmentRestController {
      * @throws Exception Exception
      */
     @RequestMapping(value = {"/EQP_SRC_DATA"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> EQP_SRC_DATA(HttpServletRequest request
+    public ApiResponse<List<Map<String,Object>>> eqpSrcData(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
         Map<String,Object> parameterMap = new HashMap<>();
@@ -53,7 +53,7 @@ public class EquipmentRestController {
      * @throws Exception Exception
      */
     @RequestMapping(value = {"/EQP_CD_SPEC"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> EQP_CD_SPEC(HttpServletRequest request
+    public ApiResponse<List<Map<String,Object>>> eqpCdSpec(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
         Map<String,Object> parameterMap = new HashMap<>();
@@ -77,7 +77,7 @@ public class EquipmentRestController {
      * @throws Exception Exception
      */
     @RequestMapping(value = {"/EQP_MST"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> EQP_MST(HttpServletRequest request
+    public ApiResponse<List<Map<String,Object>>> eqpMst(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
         Map<String,Object> parameterMap = new HashMap<>();
@@ -101,7 +101,7 @@ public class EquipmentRestController {
      * @throws Exception Exception
      */
     @RequestMapping(value = {"/EQP_MAX_LOAD"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> EQP_MAX_LOAD(HttpServletRequest request
+    public ApiResponse<List<Map<String,Object>>> eqpMaxLoad(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
         Map<String,Object> parameterMap = new HashMap<>();
@@ -112,6 +112,30 @@ public class EquipmentRestController {
             }
         }
         List<Map<String,Object>>result = mapper.selectEqpMaxLoad(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
+    /**
+     * EQP_MAX_LOAD
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_PART_NUMBER"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> EQP_PART_NUMBER(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        Map<String,Object> parameterMap = new HashMap<>();
+        for (Object key :pathVariableMap.keySet()){
+            if(key instanceof String) {
+                Object value = pathVariableMap.get(key);
+                parameterMap.put(key.toString(), value);
+            }
+        }
+        List<Map<String,Object>>result = mapper.selectEqpPartNumber(CommonUtils.getParameterMap(request));
         response.setData(result);
         response.setErrors("SUCCESS");
         return response;

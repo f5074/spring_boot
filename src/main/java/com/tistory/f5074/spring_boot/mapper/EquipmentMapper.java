@@ -9,6 +9,8 @@ public interface EquipmentMapper {
     List<Map<String, Object>> selectEqpMst(Map<String,Object> parameters)throws Exception;
     List<Map<String, Object>> selectEqpCdSpec(Map<String,Object> parameters)throws Exception;
     List<Map<String, Object>> selectEqpSrcData(Map<String,Object> parameters)throws Exception;
+    List<Map<String, Object>> selectEqpPartNumber(Map<String,Object> parameters)throws Exception;
+
 }
 
 

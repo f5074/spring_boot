@@ -1,6 +1,6 @@
-package com.tistory.f5074.spring_boot.controller;
+package com.tistory.f5074.spring_boot.controller.rest;
 
-import com.tistory.f5074.spring_boot.common.ApiResponse;
+import com.tistory.f5074.spring_boot.common.model.ApiResponse;
 import com.tistory.f5074.spring_boot.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +39,9 @@ public class UserRestController {
             , @PathVariable Map<String, Object> pathVariables) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
         Map<String,Object> parameterMap = new HashMap<>();
-
+        Object value = "";
         for (Object key :pathVariables.keySet()){
-            Object value = pathVariables.get(key);
+            if(key instanceof String) value = pathVariables.get(key);
             System.out.println(key.toString());
             System.out.println(value.toString());
             parameterMap.put(key.toString(), value);
