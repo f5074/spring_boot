@@ -1,0 +1,1 @@
+java -jar ../build/libs/spring_boot.jar --spring.profiles.active=prod --spring.datasource.username=test  --spring.datasource.password=test --variables.ip=localhost --variables.sid=XE
