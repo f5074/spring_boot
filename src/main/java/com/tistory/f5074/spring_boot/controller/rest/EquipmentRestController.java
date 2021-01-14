@@ -22,55 +22,7 @@ public class EquipmentRestController {
     private EquipmentMapper mapper;
 
     /**
-     * EQP_SRC_DATA
-     * @param request HttpServletRequest
-     * @param pathVariableMap Map<String, Object>
-     * @return ApiResponse<List<Map<String,Object>>>
-     * @throws Exception Exception
-     */
-    @RequestMapping(value = {"/EQP_SRC_DATA"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> eqpSrcData(HttpServletRequest request
-            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
-        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
-        Map<String,Object> parameterMap = new HashMap<>();
-        for (Object key :pathVariableMap.keySet()){
-            if(key instanceof String) {
-                Object value = pathVariableMap.get(key);
-                parameterMap.put(key.toString(), value);
-            }
-        }
-        List<Map<String,Object>>result = mapper.selectEqpSrcData(CommonUtils.getParameterMap(request));
-        response.setData(result);
-        response.setErrors("SUCCESS");
-        return response;
-    }
-
-    /**
-     * EQP_CD_SPEC
-     * @param request HttpServletRequest
-     * @param pathVariableMap Map<String, Object>
-     * @return ApiResponse<List<Map<String,Object>>>
-     * @throws Exception Exception
-     */
-    @RequestMapping(value = {"/EQP_CD_SPEC"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> eqpCdSpec(HttpServletRequest request
-            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
-        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
-        Map<String,Object> parameterMap = new HashMap<>();
-        for (Object key :pathVariableMap.keySet()){
-            if(key instanceof String) {
-                Object value = pathVariableMap.get(key);
-                parameterMap.put(key.toString(), value);
-            }
-        }
-        List<Map<String,Object>>result = mapper.selectEqpCdSpec(CommonUtils.getParameterMap(request));
-        response.setData(result);
-        response.setErrors("SUCCESS");
-        return response;
-    }
-
-    /**
-     * EQP_MST
+     * eqpMst
      * @param request HttpServletRequest
      * @param pathVariableMap Map<String, Object>
      * @return ApiResponse<List<Map<String,Object>>>
@@ -80,13 +32,6 @@ public class EquipmentRestController {
     public ApiResponse<List<Map<String,Object>>> eqpMst(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
-        Map<String,Object> parameterMap = new HashMap<>();
-        for (Object key :pathVariableMap.keySet()){
-            if(key instanceof String) {
-                Object value = pathVariableMap.get(key);
-                parameterMap.put(key.toString(), value);
-            }
-        }
         List<Map<String,Object>>result = mapper.selectEqpMst(CommonUtils.getParameterMap(request));
         response.setData(result);
         response.setErrors("SUCCESS");
@@ -94,7 +39,7 @@ public class EquipmentRestController {
     }
 
     /**
-     * EQP_MAX_LOAD
+     * eqpMaxLoad
      * @param request HttpServletRequest
      * @param pathVariableMap Map<String, Object>
      * @return ApiResponse<List<Map<String,Object>>>
@@ -104,13 +49,6 @@ public class EquipmentRestController {
     public ApiResponse<List<Map<String,Object>>> eqpMaxLoad(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
-        Map<String,Object> parameterMap = new HashMap<>();
-        for (Object key :pathVariableMap.keySet()){
-            if(key instanceof String) {
-                Object value = pathVariableMap.get(key);
-                parameterMap.put(key.toString(), value);
-            }
-        }
         List<Map<String,Object>>result = mapper.selectEqpMaxLoad(CommonUtils.getParameterMap(request));
         response.setData(result);
         response.setErrors("SUCCESS");
@@ -118,24 +56,68 @@ public class EquipmentRestController {
     }
 
     /**
-     * EQP_MAX_LOAD
+     * eqpCdSpec
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_CD_SPEC"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpCdSpec(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectEqpCdSpec(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
+    /**
+     * eqpSrcData
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_SRC_DATA"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpSrcData(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectEqpSrcData(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
+    /**
+     * eqpPartNumber
      * @param request HttpServletRequest
      * @param pathVariableMap Map<String, Object>
      * @return ApiResponse<List<Map<String,Object>>>
      * @throws Exception Exception
      */
     @RequestMapping(value = {"/EQP_PART_NUMBER"}, method = RequestMethod.POST)
-    public ApiResponse<List<Map<String,Object>>> EQP_PART_NUMBER(HttpServletRequest request
+    public ApiResponse<List<Map<String,Object>>> eqpPartNumber(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
-        Map<String,Object> parameterMap = new HashMap<>();
-        for (Object key :pathVariableMap.keySet()){
-            if(key instanceof String) {
-                Object value = pathVariableMap.get(key);
-                parameterMap.put(key.toString(), value);
-            }
-        }
         List<Map<String,Object>>result = mapper.selectEqpPartNumber(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
+    /**
+     * eqpDeptCd
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_DEPT_CD"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpDeptCd(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectDeptMst(CommonUtils.getParameterMap(request));
         response.setData(result);
         response.setErrors("SUCCESS");
         return response;

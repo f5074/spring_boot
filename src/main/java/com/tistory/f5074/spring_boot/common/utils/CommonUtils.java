@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CommonUtils {
 
@@ -37,6 +38,22 @@ public class CommonUtils {
 //            }else{
 //                parameterMap.put(paramName, parameters[0]);
 //            }
+        }
+        return parameterMap;
+    }
+
+    /**
+     * Contains Map Value to HashMap
+     * @param map Map
+     * @return map Map
+     */
+    public static Map<String, Object> getContainsMap(@SuppressWarnings("rawtypes") Map map){
+        HashMap<String, Object> parameterMap = new HashMap<>();
+        for (Object key :map.keySet()){
+            if(key instanceof String) {
+                Object value = map.get(key);
+                parameterMap.put(key.toString(), value);
+            }
         }
         return parameterMap;
     }
