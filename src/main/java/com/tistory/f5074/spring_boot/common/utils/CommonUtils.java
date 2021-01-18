@@ -22,12 +22,18 @@ public class CommonUtils {
         while(enums.hasMoreElements()){
             String paramName = enums.nextElement();
             String[] parameters = request.getParameterValues(paramName);
-            // Parameter가 배열일 경우
+            // Parameter ITEM_CD가 배열일 경우
             if(paramName.equals("ITEM_CD") && !StringUtils.isEmpty(parameters[0])){
                 String value = parameters[0];
                 parameterMap.put(paramName, Arrays.asList(value.split(",")));
+            }
+            // Parameter WORK_CENTER가 배열일 경우
+            if(paramName.equals("WORK_CENTER") && !StringUtils.isEmpty(parameters[0])){
+                String value = parameters[0];
+                parameterMap.put(paramName, Arrays.asList(value.split(",")));
+            }
             // Parameter가 배열이 아닌 경우
-            }else{
+            else{
                 parameterMap.put(paramName, parameters[0]);
             }
 

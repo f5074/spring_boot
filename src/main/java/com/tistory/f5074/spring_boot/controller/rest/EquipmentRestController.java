@@ -117,11 +117,29 @@ public class EquipmentRestController {
     public ApiResponse<List<Map<String,Object>>> eqpDeptCd(HttpServletRequest request
             , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
         ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
-        List<Map<String,Object>>result = mapper.selectDeptMst(CommonUtils.getParameterMap(request));
+        List<Map<String,Object>>result = mapper.selectEqpDeptMst(CommonUtils.getParameterMap(request));
         response.setData(result);
         response.setErrors("SUCCESS");
         return response;
     }
+
+    /**
+     * eqpWorkCenter
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_WORK_CENTER"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpWorkCenter(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectEqpWorkCenter(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
 
     /**
      * selectEqpMaxLoad

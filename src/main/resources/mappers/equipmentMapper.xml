@@ -17,6 +17,9 @@
 		<if test="DEPT_CODE != null and DEPT_CODE != ''">
 			AND EMST.DEPT_CODE = #{DEPT_CODE}
 		</if>
+		<if test="WORK_CENTER != null and WORK_CENTER != ''" >
+			AND EMST.WORK_CENTER IN <foreach collection="WORK_CENTER" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+		</if>
 		  AND EMST.EQP_TYPE = 'M'
 		  AND CEMST.USE_YN = 'Y'
 	</select>
@@ -35,16 +38,9 @@
 			, ELOAD.CREATE_TIME
 			, ELOAD.ITEM_AVG
 			, ELOAD.ITEM_RNG
-			, (  SELECT CIM_EQP_DESC
-		 		  FROM CIM_EQP_MST@CIMORA
-				 WHERE 1 = 1
-				<if test="EQP_ID != null and EQP_ID != ''">
-					AND EQP_ID = #{EQP_ID}
-				</if>
-				<if test="SITE != null and SITE != ''">
-					AND SITE = #{SITE}
-				</if>
-			   ) EQP_DESC
+			<if test="EQP_DESC != null and EQP_DESC != ''">
+			, #{EQP_DESC} EQP_DESC
+			</if>
 		FROM EQP_MAX_LOAD@CIMORA ELOAD
 		WHERE 1 = 1
 		<if test="SITE != null and SITE != ''">
@@ -81,7 +77,9 @@
 		SELECT SRC.SITE
 			, SRC.EQP_ID
 			, SRC.EQP_NO
-			, EMST.EQP_DESC
+		<if test="EQP_DESC != null and EQP_DESC != ''">
+			, #{EQP_DESC} EQP_DESC
+		</if>
 			, SRC.CUR_TIME
 			, SRC.ITEM_SPEC
 			, SRC.EQP_PART_NUMBER
@@ -90,10 +88,13 @@
 			, SRC.ITEM_VALUE
 			, SRC.CREATE_TIME
 		FROM EQP_SRC_DATA@CIMORA SRC
-		INNER JOIN EQP_MST EMST ON EMST.EQP_ID = SRC.EQP_ID
 		WHERE 1 = 1
+		<if test="SITE != null and SITE != ''" >
 		  AND SRC.SITE = #{SITE}
+		</if>
+		<if test="EQP_ID != null and EQP_ID != ''" >
 		  AND SRC.EQP_ID = #{EQP_ID}
+		</if>
 		<if test="ITEM_CD != null and ITEM_CD != ''" >
 		  AND SRC.ITEM_CD IN <foreach collection="ITEM_CD" item="item"  open="(" close=")" separator=",">#{item}</foreach>
 		</if>
@@ -126,8 +127,8 @@
 		 GROUP BY ELOAD.EQP_ID, ELOAD.ITEM_SPEC, ELOAD.EQP_PART_NUMBER, TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD')
 		 ORDER BY MIN(TO_CHAR(TO_TIMESTAMP(ELOAD.PER_MIN, 'YYYYMMDD HH24MISSFF3'), 'YYYYMMDD HH24MISSFF3')) ASC
 	</select>
-	<select id="selectDeptMst" parameterType="hashmap" resultType="hashmap">
-		/* selectEqpMst */
+	<select id="selectEqpDeptMst" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpDeptMst */
 		 SELECT DMST.CORP_CODE
 				, DMST.DEPT_CODE
 				, DMST.DEPT_NAME
@@ -150,5 +151,29 @@
 		  AND GENE_DV = #{GENE_DV}
 		</if>
 		AND USE_YN = 'Y')
+	</select>
+
+	<select id="selectEqpWorkCenter" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpWorkCenter */
+		SELECT WCEN.PLANT_CODE AS SITE
+			 , WCEN.WORK_CENTER
+			 , WCEN.WORK_CENTER_NAME
+			 , WCEN.DEPT_CODE
+			 , WCEN.LOAD_EST_BASE
+			 , WCEN.WORK_CENTER_TYPE
+			 , WCEN.RUN_TYPE
+			 , WCEN.BATCH_SIZE
+			 , WCEN.CREATE_DATE_TIME
+			 , WCEN.RECORD_INPUT_TYPE
+			 , WCEN.WEIGH_FLAG
+		  FROM WORK_CENTER WCEN
+		 WHERE 1 = 1
+		<if test="SITE != null and SITE != ''" >
+		   AND WCEN.PLANT_CODE = #{SITE}
+		</if>
+		<if test="DEPT_CODE != null and DEPT_CODE != ''" >
+		   AND WCEN.DEPT_CODE = #{DEPT_CODE}
+		</if>
+		ORDER BY WCEN.PLANT_CODE, WCEN.WORK_CENTER
 	</select>
 </mapper>
