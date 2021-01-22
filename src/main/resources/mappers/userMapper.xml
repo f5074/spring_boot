@@ -28,4 +28,12 @@
 		</if>
 	</select>
 
+	<select id="selectTemplate" parameterType="hashmap" resultType="hashmap">
+		/* selectTemplate */
+<![CDATA[
+
+
+]]>
+	</select>
+
 </mapper>

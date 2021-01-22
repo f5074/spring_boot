@@ -11,9 +11,8 @@
 			, EMST.EQP_DESC AS EQP_DESC
 		FROM EQP_MST EMST
 		INNER JOIN CIM_EQP_MST CEMST ON CEMST.SITE = EMST.PLANT_CODE AND CEMST.EQP_ID = EMST.EQP_ID AND CEMST.EQP_NO = EMST.EQP_NO
-		<if test="SITE != null and SITE != ''">
-			WHERE EMST.PLANT_CODE = #{SITE}
-		</if>
+		WHERE 1 = 1
+		   AND EMST.PLANT_CODE = #{SITE}
 		<if test="DEPT_CODE != null and DEPT_CODE != ''">
 			AND EMST.DEPT_CODE = #{DEPT_CODE}
 		</if>
@@ -43,9 +42,7 @@
 			</if>
 		FROM EQP_MAX_LOAD@CIMORA ELOAD
 		WHERE 1 = 1
-		<if test="SITE != null and SITE != ''">
 		AND ELOAD.SITE = #{SITE}
-		</if>
 		<if test="EQP_ID != null and EQP_ID != ''">
 		AND ELOAD.EQP_ID = #{EQP_ID}
 		</if>
@@ -168,12 +165,119 @@
 			 , WCEN.WEIGH_FLAG
 		  FROM WORK_CENTER WCEN
 		 WHERE 1 = 1
-		<if test="SITE != null and SITE != ''" >
 		   AND WCEN.PLANT_CODE = #{SITE}
-		</if>
 		<if test="DEPT_CODE != null and DEPT_CODE != ''" >
 		   AND WCEN.DEPT_CODE = #{DEPT_CODE}
 		</if>
 		ORDER BY WCEN.PLANT_CODE, WCEN.WORK_CENTER
 	</select>
+	<select id="selectEqpPerfPop" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpPerfPop */
+		SELECT EQP_ID
+		 , SUBSTR(TRACKOUTDT, 1, 8) CUR_DT
+		 , SUM(CURRENT_QTY) POP_QTY
+		 , 0 CIM_QTY
+		 , MAX(EQP_DESC) EQP_DESC
+		FROM (
+		   SELECT WIP_LOT_PROCESS.SITE
+				, WIP_LOT.EQP_ID
+				, EQP_MST.EQP_DESC EQP_DESC
+				, WIP_LOT_PROCESS.TRANS_DATE_TIME
+				, WIP_LOT.ORDER_QTY
+				, WIP_LOT.CURRENT_QTY
+				, WIP_LOT.END_QTY
+				, SUBSTR(WIP_LOT_PROCESS.TRACKIN_DATE_TIME, 1, 8) TRACKIN_DT
+				, SUBSTR(WIP_LOT_PROCESS.TRACKOUT_DATE_TIME, 1, 8) TRACKOUTDT
+			FROM WIP_LOT
+			INNER JOIN WIP_LOT_PROCESS ON WIP_LOT_PROCESS.LOT_ID = WIP_LOT.LOT_ID AND WIP_LOT_PROCESS.SITE = WIP_LOT.SITE
+			INNER JOIN EQP_MST 	ON EQP_MST.PLANT_CODE = WIP_LOT.SITE AND EQP_MST.EQP_ID = WIP_LOT.EQP_ID
+--			INNER JOIN CIM_EQP_MST ON EQP_MST.PLANT_CODE = CIM_EQP_MST.SITE AND EQP_MST.EQP_ID = CIM_EQP_MST.EQP_ID AND EQP_MST.EQP_NO = CIM_EQP_MST.EQP_NO AND CIM_EQP_MST.USE_YN = 'Y'
+			INNER JOIN WORK_CENTER 	ON WORK_CENTER.PLANT_CODE = WIP_LOT.SITE AND WORK_CENTER.WORK_CENTER = WIP_LOT.WORK_CENTER
+			INNER JOIN DEPT_MST 	ON DEPT_MST.DEPT_CODE = WORK_CENTER.DEPT_CODE
+			WHERE 1 = 1
+				AND WIP_LOT.SITE = #{SITE}
+				AND WIP_LOT_PROCESS.CANCEL_FLAG = 'F'
+				AND WIP_LOT_PROCESS.TRACKOUT_DATE_TIME > TO_CHAR(TO_TIMESTAMP(#{START_DT} ,'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+				AND WIP_LOT_PROCESS.TRACKOUT_DATE_TIME <![CDATA[<]]> TO_CHAR(TO_TIMESTAMP(#{END_DT} ,'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+			<if test="DEPT_CODE != null and DEPT_CODE != ''">
+				AND DEPT_MST.DEPT_CODE = #{DEPT_CODE}
+			</if>
+			<if test="WORK_CENTER != null and WORK_CENTER != ''" >
+				AND WORK_CENTER.WORK_CENTER IN <foreach collection="WORK_CENTER" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+			</if>
+			<if test="EQP_ID != null and WORK_CENTER != ''" >
+				AND WIP_LOT.EQP_ID IN <foreach collection="EQP_ID" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+			</if>
+		)
+		GROUP BY SUBSTR(TRACKOUTDT, 1, 8), EQP_ID
+	</select>
+
+	<select id="selectEqpPerfCim" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpPerfCim */
+		SELECT ECHN.EQP_ID
+			 , SUBSTR(ECHN.CUR_TIME, 1, 8) CUR_DT
+			 , SUM(GQTY) CIM_QTY
+			 , 0 POP_QTY
+			 , MAX((SELECT EQP_DESC FROM EQP_MST WHERE PLANT_CODE = ECHN.SITE AND EQP_ID = ECHN.EQP_ID)) EQP_DESC
+		  FROM EQP_CNT_HIS_NOW@CIMORA ECHN
+		 WHERE 1 = 1
+		   AND ECHN.SITE = #{SITE}
+		   AND ECHN.CUR_TIME > TO_CHAR(TO_TIMESTAMP(#{START_DT} ,'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+		   AND ECHN.CUR_TIME <![CDATA[<]]> TO_CHAR(TO_TIMESTAMP(#{END_DT} ,'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+		GROUP BY SUBSTR(ECHN.CUR_TIME, 1, 8), ECHN.EQP_ID
+		ORDER BY SUBSTR(ECHN.CUR_TIME, 1, 8), ECHN.EQP_ID
+	</select>
+	<select id="selectEqpSetupPerf" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpSetupPerf */
+		SELECT SITE
+			, CUR_DT
+			, EQP_ID
+			, EQP_DESC
+			, EQP_NO
+			, STATUS_D
+			, (
+				SELECT GENE_CD_DESC
+				FROM T_CD_GENE_DATA
+				WHERE GENE_DV = 'STAT_EQP_SET'
+					AND GENE_CD = STATUS_D
+				) AS STATUS_D_DESC
+			, COUNT(STATUS_D) AS D_CNT
+		FROM (
+			SELECT EHIS.SITE
+				, EHIS.EQP_ID
+				, EHIS.EQP_NO
+				, SUBSTR(EHIS.CUR_TIME, 1, 8) CUR_DT
+				, EHIS.STATUS
+				, EHIS.STATUS_D
+				, EMST.EQP_DESC
+			FROM EQP_MODE_GEN_HIST EHIS
+			INNER JOIN EQP_MST EMST ON EMST.PLANT_CODE = EHIS.SITE
+				AND EMST.EQP_ID = EHIS.EQP_ID
+				AND EMST.EQP_NO = EHIS.EQP_NO
+			INNER JOIN WORK_CENTER WC ON WC.PLANT_CODE = EHIS.SITE
+				AND WC.WORK_CENTER = EHIS.WORK_CENTER
+			INNER JOIN DEPT_MST DEPT ON DEPT.DEPT_CODE = WC.DEPT_CODE
+			WHERE 1 = 1
+				AND EHIS.STATUS_D IS NOT NULL
+				AND EHIS.STATUS = 'SETUP'
+				AND EHIS.SITE = #{SITE}
+			<if test="DEPT_CODE != null and DEPT_CODE != ''">
+				AND DEPT.DEPT_CODE = #{DEPT_CODE}
+			</if>
+			<if test="WORK_CENTER != null and WORK_CENTER != ''" >
+				AND EHIS.WORK_CENTER IN <foreach collection="WORK_CENTER" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+			</if>
+			<if test="EQP_ID != null and WORK_CENTER != ''" >
+				AND EHIS.EQP_ID IN <foreach collection="EQP_ID" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+			</if>
+				AND EHIS.STATUS_D IN ('ChangeMold', 'ChangePowder', 'SampleProduction')
+				AND EHIS.CUR_TIME > TO_CHAR(TO_TIMESTAMP(#{START_DT}, 'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+				AND EHIS.CUR_TIME <![CDATA[<]]> TO_CHAR(TO_TIMESTAMP(#{END_DT}, 'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+			)
+		GROUP BY SITE, CUR_DT, EQP_DESC, EQP_NO, EQP_ID, STATUS, STATUS_D
+		ORDER BY SITE, CUR_DT, EQP_DESC ASC, EQP_NO, EQP_ID, STATUS, DECODE(STATUS_D, 'ChangePowder', 1, 'ChangeMold', 2, 'SampleProduction', 3)
+	</select>
+
 </mapper>
+
+

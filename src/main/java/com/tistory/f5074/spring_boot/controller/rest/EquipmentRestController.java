@@ -140,6 +140,56 @@ public class EquipmentRestController {
         return response;
     }
 
+    /**
+     * eqpPerfPop
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_PERF_POP"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpPerfPop(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectEqpPerfPop(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
+    /**
+     * eqpPerfCim
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_PERF_CIM"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpPerfCim(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectEqpPerfCim(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
+
+    /**
+     * eqpSetupPerf
+     * @param request HttpServletRequest
+     * @param pathVariableMap Map<String, Object>
+     * @return ApiResponse<List<Map<String,Object>>>
+     * @throws Exception Exception
+     */
+    @RequestMapping(value = {"/EQP_SETUP_PERF"}, method = RequestMethod.POST)
+    public ApiResponse<List<Map<String,Object>>> eqpSetupPerf(HttpServletRequest request
+            , @PathVariable Map<String, Object> pathVariableMap) throws Exception {
+        ApiResponse<List<Map<String,Object>>> response = new ApiResponse<>();
+        List<Map<String,Object>>result = mapper.selectEqpSetupPerf(CommonUtils.getParameterMap(request));
+        response.setData(result);
+        response.setErrors("SUCCESS");
+        return response;
+    }
 
     /**
      * selectEqpMaxLoad
