@@ -277,6 +277,59 @@
 		GROUP BY SITE, CUR_DT, EQP_DESC, EQP_NO, EQP_ID, STATUS, STATUS_D
 		ORDER BY SITE, CUR_DT, EQP_DESC ASC, EQP_NO, EQP_ID, STATUS, DECODE(STATUS_D, 'ChangePowder', 1, 'ChangeMold', 2, 'SampleProduction', 3)
 	</select>
+	<select id="selectEqpSetupPerfSum" parameterType="hashmap" resultType="hashmap">
+		/* selectEqpSetupPerfSum */
+		WITH TB_BASE AS (
+			   SELECT SITE
+					, CUR_DT
+					, EQP_ID
+					, EQP_DESC
+					, EQP_NO
+					, STATUS_D
+					, COUNT(STATUS_D) AS D_CNT
+				FROM (
+					SELECT EHIS.SITE
+						, EHIS.EQP_ID
+						, EHIS.EQP_NO
+						, SUBSTR(EHIS.CUR_TIME, 1, 8) CUR_DT
+						, EHIS.STATUS
+						, EHIS.STATUS_D
+						, EMST.EQP_DESC
+					FROM EQP_MODE_GEN_HIST EHIS
+					INNER JOIN EQP_MST EMST ON EMST.PLANT_CODE = EHIS.SITE
+						AND EMST.EQP_ID = EHIS.EQP_ID
+						AND EMST.EQP_NO = EHIS.EQP_NO
+					INNER JOIN WORK_CENTER WC ON WC.PLANT_CODE = EHIS.SITE
+						AND WC.WORK_CENTER = EHIS.WORK_CENTER
+					INNER JOIN DEPT_MST DEPT ON DEPT.DEPT_CODE = WC.DEPT_CODE
+					WHERE 1 = 1
+						AND EHIS.STATUS_D IS NOT NULL
+						AND EHIS.STATUS = 'SETUP'
+						AND EHIS.SITE = #{SITE}
+					<if test="DEPT_CODE != null and DEPT_CODE != ''">
+						AND DEPT.DEPT_CODE = #{DEPT_CODE}
+					</if>
+					<if test="WORK_CENTER != null and WORK_CENTER != ''" >
+						AND EHIS.WORK_CENTER IN <foreach collection="WORK_CENTER" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+					</if>
+					<if test="EQP_ID != null and WORK_CENTER != ''" >
+						AND EHIS.EQP_ID IN <foreach collection="EQP_ID" item="item"  open="(" close=")" separator=",">#{item}</foreach>
+					</if>
+						AND EHIS.STATUS_D IN ('ChangeMold', 'ChangePowder', 'SampleProduction')
+						AND EHIS.CUR_TIME > TO_CHAR(TO_TIMESTAMP('202101210000', 'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+						AND EHIS.CUR_TIME <![CDATA[<]]>  TO_CHAR(TO_TIMESTAMP('202101252359', 'YYYYMMDDHH24MI'), 'YYYYMMDD HH24MISSFF3')
+					)
+				GROUP BY SITE, CUR_DT, EQP_DESC, EQP_NO, EQP_ID, STATUS, STATUS_D
+				ORDER BY SITE, CUR_DT, EQP_DESC ASC, EQP_NO, EQP_ID, STATUS, DECODE(STATUS_D, 'ChangePowder', 1, 'ChangeMold', 2, 'SampleProduction', 3)
+		 )
+		SELECT SITE, CUR_DT, EQP_ID, EQP_DESC, EQP_NO, NVL(MOLD,0) MOLD, NVL(POWDER,0) POWDER, NVL(PROD, 0) PROD, NVL(MOLD + POWDER, 0) SUM_CNT
+		  FROM (
+		SELECT *
+		   FROM TB_BASE
+		 PIVOT (SUM(D_CNT) FOR STATUS_D IN ('ChangeMold' AS "MOLD", 'ChangePowder' AS "POWDER", 'SampleProduction' AS "PROD"))
+		)
+		ORDER BY EQP_DESC, CUR_DT
+	</select>
 
 </mapper>
 

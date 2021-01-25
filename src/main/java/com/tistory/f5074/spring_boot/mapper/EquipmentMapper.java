@@ -15,6 +15,7 @@ public interface EquipmentMapper {
     List<Map<String, Object>> selectEqpPerfPop(Map<String,Object> parameters)throws Exception;
     List<Map<String, Object>> selectEqpPerfCim(Map<String,Object> parameters)throws Exception;
     List<Map<String, Object>> selectEqpSetupPerf(Map<String,Object> parameters)throws Exception;
+    List<Map<String, Object>> selectEqpSetupPerfSum(Map<String,Object> parameters)throws Exception;
 }
 
 
