@@ -38,7 +38,7 @@ server:
     basedir: .
     accesslog:
       buffered: false # Buffer output such that it is only flushed periodically.
-      directory: logs # Directory in which log files are created. Can be relative to the tomcat base dir or absolute.
+      directory: ./f5074-api/logs # Directory in which log files are created. Can be relative to the tomcat base dir or absolute.
       enabled: false # Enable access log.
       file-date-format: .yyyy-MM-dd # Date format to place in log file name.
       pattern: common # Format pattern for access logs.
